@@ -1,13 +1,50 @@
 version: "3.8"
+
+volumes:
+  vol-emqx-data:
+    name: foo-emqx-data
+  vol-emqx-etc:
+    name: foo-emqx-etc
+  vol-emqx-log:
+    name: foo-emqx-log
+
 services:
+  mongo:
+    container_name: mongo
+    image: mongo:4.4
+    restart: always
+    environment:
+      TZ: "America/Argentina/Cordoba"
+      MONGO_INITDB_ROOT_USERNAME: "devuser"
+      MONGO_INITDB_ROOT_PASSWORD: "devpassword"
+    volumes:
+      - ./mongodata:/data/db
+    ports:
+      - 27017:27017
+      
 
   emqx:
     container_name: emqx
     image: emqx/emqx:4.2.3
     restart: always
     ports:
-      - "${emqxdashport}:18083"
+      - "18083:18083"
       - "8083:8083"
+
+    volumes:
+      - vol-emqx-data:/opt/emqx/data
+      - vol-emqx-etc:/opt/emqx/etc
+      - vol-emqx-log:/opt/emqx/log
+
     environment:
+
+      EMQX_NAME: smart-green
+      EMQX_HOST: 127.0.0.1
+
+      TZ: "America/Argentina/Cordoba"
+
+      #default dashpass
+      EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "emqxdashpass"
+
       #listener.tcp.external.max_connections
       EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
