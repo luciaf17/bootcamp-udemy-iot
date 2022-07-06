@@ -1,12 +1,12 @@
 version: "3.8"
 
-volumes:
-  vol-emqx-data:
-    name: foo-emqx-data
-  vol-emqx-etc:
-    name: foo-emqx-etc
-  vol-emqx-log:
-    name: foo-emqx-log
+# volumes:
+#   vol-emqx-data:
+#     name: foo-emqx-data
+#   vol-emqx-etc:
+#     name: foo-emqx-etc
+#   vol-emqx-log:
+#     name: foo-emqx-log
 
 services:
   mongo:
@@ -24,17 +24,27 @@ services:
       
 
   emqx:
+  
+
     container_name: emqx
     image: emqx/emqx:4.2.3
     restart: always
     ports:
-      - "18083:18083"
-      - "8083:8083"
+      - 18083:18083
+      - 18084:18084
+      - 1883:1883
+      - 8883:8883
+      - 8083:8083
+      - 8084:8084
+      - 8085:8081
 
-    volumes:
-      - vol-emqx-data:/opt/emqx/data
-      - vol-emqx-etc:/opt/emqx/etc
-      - vol-emqx-log:/opt/emqx/log
+    # volumes:
+    #   - vol-emqx-data:/opt/emqx/data
+    #   - vol-emqx-etc:/opt/emqx/etc
+    #   - vol-emqx-log:/opt/emqx/log
+
+    links:
+      - mongo
 
     environment:
 
@@ -45,6 +55,41 @@ services:
 
       #default dashpass
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "emqxdashpass"
+
+      EMQX_ALLOW_ANONYMOUS: "false"
+      EMQX_NOMATCH: "deny"
+
+      # MONGO CONNECTION
+      EMQX_AUTH__MONGO__TYPE: single
+      EMQX_AUTH__MONGO__TOPOLOGY__POOL_SIZE: 1
+      EMQX_AUTH__MONGO__TOPOLOGY__MAX_OVERFLOW: 0
+
+      EMQX_AUTH__MONGO__SERVER: "mongo:27017"
+      EMQX_AUTH__MONGO__POOL: 8
+
+      EMQX_AUTH__MONGO__LOGIN: "devuser"
+      EMQX_AUTH__MONGO__PASSWORD: "devpassword"
+      EMQX_AUTH__MONGO__AUTH_SOURCE: admin
+
+      EMQX_AUTH__MONGO__DATABASE: "smart-green"
+      EMQX_AUTH__MONGO__AUTH_QUERY__COLLECTION: "emqxauthrules"
+
+      EMQX_AUTH__MONGO__SUPER_QUERY__COLLECTION: "emqxauthrules"
+      EMQX_AUTH__MONGO__SUPER_QUERY__SUPER_FIELD: "is_superuser"
+      EMQX_AUTH__MONGO__SUPER_QUERY__SELECTOR: "username=%u"
+      EMQX_AUTH__MONGO__SUPER_QUERY: "off"
+
+      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_HASH: plain
+      EMQX_AUTH__MONGO__AUTH_QUERY__PASSWORD_FIELD: "password"
+      EMQX_AUTH__MONGO__AUTH_QUERY__SELECTOR: "username=%u"
+
+      ## Enable ACL query.
+      #Access control list
+      EMQX_AUTH__MONGO__ACL_QUERY: "on"
+      EMQX_AUTH__MONGO__ACL_QUERY__COLLECTION: "emqxauthrules"
+      EMQX_AUTH__MONGO__ACL_QUERY__SELECTOR: "username=%u"
+
+      EMQX_LOADED_PLUGINS: "emqx_recon,emqx_retainer,emqx_management,emqx_dashboard, emqx_auth_mongo"
 
       #listener.tcp.external.max_connections
       EMQX_LISTENER__TCP__EXTERNAL__MAX_CONNECTIONS: 1000
