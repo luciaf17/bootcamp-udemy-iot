@@ -4,17 +4,17 @@
       <ul class="nav">
         <li class="nav-item">
           <a
-            href="http://creative-tim.com"
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener"
             class="nav-link"
           >
-            Creative Tim
+            Smart Green ®
           </a>
         </li>
         <li class="nav-item">
           <a
-            href="https://www.creative-tim.com/presentation"
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener"
             class="nav-link"
@@ -24,7 +24,7 @@
         </li>
         <li class="nav-item">
           <a
-            href="http://blog.creative-tim.com"
+            href="https://www.instagram.com/"
             target="_blank"
             rel="noopener"
             class="nav-link"
@@ -33,7 +33,7 @@
           </a>
         </li>
       </ul>
-      <div class="copyright">
+      <!-- <div class="copyright">
         &copy; {{ year }}, made with <i class="tim-icons icon-heart-2"></i> by
         
         <a
@@ -43,7 +43,7 @@
           >Creative Tim</a
         >
         for a better web.
-      </div>
+      </div> -->
     </div>
   </footer>
 </template>

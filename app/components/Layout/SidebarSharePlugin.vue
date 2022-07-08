@@ -40,22 +40,6 @@
           >
             Documentation
           </a>
-          <a
-            href="https://creative-tim.com/product/nuxt-black-dashboard"
-            target="_blank"
-            rel="noopener"
-            class="btn btn-primary btn-block btn-round"
-          >
-            Download Now
-          </a>
-          <a
-            href="https://creative-tim.com/product/nuxt-black-dashboard-pro"
-            target="_blank"
-            rel="noopener"
-            class="btn btn-info btn-block btn-round"
-          >
-            Upgrade to PRO
-          </a>
         </li>
       </ul>
     </div>
