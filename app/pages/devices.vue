@@ -89,11 +89,14 @@
             prop="templateName"
             label="Template"
           ></el-table-column>
-
+ 
           <el-table-column label="Actions">
 
             <div slot-scope="{ row, $index }">
-                {{row.saverRule}}
+                <el-tooltip content="Saver Status Indicator">
+                
+                  <i class="fas fa-database " :class="{ 'text-success': row.saverRule,  'text-dark': !row.saverRule}"></i>
+                </el-tooltip>
             <el-tooltip content="Database Saver">
                 
                 <base-switch @click="updateSaverRuleStatus($index)" :value="row.saverRule" type="primary" on-text="On" off-text="Off"></base-switch>
@@ -123,6 +126,11 @@
         </el-table>
       </card>
     </div>
+
+  <pre>
+    {{ devices }}
+  </pre>
+
   </div>
 </template>
 
