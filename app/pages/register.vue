@@ -40,7 +40,7 @@
             type="primary"
             class="mb-3"
             size="lg"
-            @click="register"
+            @click="register()"
             block
           >
             Register
@@ -64,6 +64,7 @@
 </template>
 <script>
 export default {
+  middleware: 'notAuthenticated',
   layout: "auth",
   data() {
     return {
@@ -74,7 +75,48 @@ export default {
       }
     };
   },
-  methods: {}
+  methods: {
+    register() {
+      this.$axios.post("/register", this.user)
+      .then(res => {
+        //usuario creado
+       if(res.data.status == "success") {
+         this.$notify({
+           group: "notification",
+           type: "success",
+           icon: "tim-icons icon-check-2",
+           message: "Register Success, now you can login..."
+         });
+         this.user = {
+           name: "",
+           email: "",
+           password: ""
+         };
+         return;
+       }
+      })
+      .catch(err => {
+        console.log(err.response.data);
+        if(err.response.data.message.errors.email.kind == "unique"){
+        this.$notify({
+          group: "notification",
+          type: "danger",
+          icon: "tim-icons icon-alert-circle-exc",
+          message: "User already exists :("
+        });
+        return;
+        }else {
+          this.$notify({
+            group: "notification",
+            type: "danger",
+            icon: "tim-icons icon-alert-circle-exc",
+            message: "Error creating user..."
+          });
+          return;
+        }
+      });
+    }
+  }
 };
 </script>
 <style>
