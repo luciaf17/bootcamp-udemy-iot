@@ -46,6 +46,9 @@ services:
     links:
       - mongo
 
+    extra_hosts:
+      - "localhost:192.168.1.108"
+
     environment:
 
       EMQX_NAME: smart-green
@@ -55,6 +58,9 @@ services:
 
       #default dashpass
       EMQX_DASHBOARD__DEFAULT_USER__PASSWORD: "emqxdashpass"
+
+      #default app secret
+      EMQX_MANAGEMENT__DEFAULT_APPLICATION__SECRET: "emqxsecret"
 
       EMQX_ALLOW_ANONYMOUS: "false"
       EMQX_NOMATCH: "deny"
