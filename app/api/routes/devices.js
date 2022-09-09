@@ -5,6 +5,9 @@ const axios = require("axios");
 
 import Device from "../models/device.js";
 import SaverRule from "../models/emqx_saver_rule.js";
+import Template from '../models/template.js';
+import AlarmRule from '../models/emqx_alarm_rule.js';
+
 
 /* 
   ___  ______ _____ 
@@ -36,11 +39,20 @@ router.get("/device", checkAuth, async (req, res) => {
     //get saver rules
     const saverRules = await getSaverRules(userId);
 
+
+    //get templates
+    const templates = await getTemplates(userId);
+
+
+    //get alarm rules
+    const alarmRules = await getAlarmRules(userId);
+
+
     //saver rules to -> devices
     devices.forEach((device, index) => {
-      devices[index].saverRule = saverRules.filter(
-        saverRule => saverRule.dId == device.dId
-      )[0];
+      devices[index].saverRule = saverRules.filter(saverRule => saverRule.dId == device.dId)[0];
+      devices[index].template = templates.filter(template => template._id == device.templateId)[0];
+      devices[index].alarmRules = alarmRules.filter(alarmRule => alarmRule.dId == device.dId);
     });
 
     const toSend = {
@@ -51,6 +63,7 @@ router.get("/device", checkAuth, async (req, res) => {
     res.json(toSend);
   } catch (error) {
     console.log("ERROR GETTING DEVICES");
+    console.log(error)
 
     const toSend = {
       status: "error",
@@ -64,7 +77,9 @@ router.get("/device", checkAuth, async (req, res) => {
 //NEW DEVICE
 router.post("/device", checkAuth, async (req, res) => {
   try {
+
     const userId = req.userData._id;
+    
     var newDevice = req.body.newDevice;
 
     newDevice.userId = userId;
@@ -125,11 +140,11 @@ router.delete("/device", checkAuth, async (req, res) => {
 });
 
 //UPDATE DEVICE (SELECTOR)
-router.put("/device", checkAuth, (req, res) => {
+router.put("/device", checkAuth, async (req, res) => {
   const dId = req.body.dId;
   const userId = req.userData._id;
 
-  if (selectDevice(userId, dId)) {
+  if (await selectDevice(userId, dId)) {
     const toSend = {
       status: "success"
     };
@@ -168,6 +183,17 @@ ______ _   _ _   _ _____ _____ _____ _____ _   _  _____
 \_|    \___/\_| \_/\____/ \_/  \___/ \___/\_| \_/\____/  
 */
 
+async function getAlarmRules(userId) {
+
+  try {
+      const rules = await AlarmRule.find({ userId: userId });
+      return rules;
+  } catch (error) {
+      return "error";
+  }
+
+}
+
 async function selectDevice(userId, dId) {
   try {
     const result = await Device.updateMany(
@@ -191,6 +217,18 @@ async function selectDevice(userId, dId) {
 /*
  SAVER RULES FUNCTIONS
 */
+
+
+//get templates
+async function getTemplates(userId) {
+  try {
+    const templates = await Template.find({ userId: userId });
+    return templates;
+  } catch (error) {
+    return false;
+  }
+} 
+
 //get saver rules
 async function getSaverRules(userId) {
   try {
