@@ -2,10 +2,10 @@
   <div class="sidebar" :data="backgroundColor">
     <div class="sidebar-wrapper" ref="sidebarScrollArea">
       <div class="logo">
-        <a href="https://www.instagram.com/" class="simple-text logo-mini">
-          <img :src="logo" alt="app-logo" />
+        <a href="#" class="simple-text logo-mini">
+          <img src="https://pbs.twimg.com/profile_images/997526607/Picture_4_400x400.png" alt="app-logo" />
         </a>
-        <a href="https://www.instagram.com/" class="simple-text logo-normal">
+        <a href="#" class="simple-text logo-normal">
           {{ title }}
         </a>
       </div>
@@ -39,7 +39,7 @@ export default {
     },
     logo: {
       type: String,
-      default: 'https://pbs.twimg.com/profile_images/997526607/Picture_4_400x400.png',
+      default: 'http://demos.creative-tim.com/nuxt-black-dashboard-pro/img/icon-nuxt.svg',
       description: 'Sidebar app logo'
     },
     backgroundColor: {
